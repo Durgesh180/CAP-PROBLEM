@@ -1,0 +1,41 @@
+class Solution {
+    int a, b;
+    boolean[][] visited;
+    int[][] dir = new int[][]{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+    public boolean containsCycle(char[][] g) {
+        a = g.length; 
+        b = g[0].length; 
+        visited = new boolean[a][b];
+        for (int i = 0; i < a; i++) {
+            for (int j = 0; j < b; j++) {
+                if (!visited[i][j] && bfs(g, i, j, -1, -1))
+                 return true;
+            }
+        }
+        return false;
+    }
+    
+    private boolean bfs(char[][] g, int i, int j, int x, int y) { 
+        char c = g[i][j];
+        Queue<int[]> queue = new LinkedList<>();
+        visited[i][j] = true;
+        queue.offer(new int[]{i, j, x, y});
+        while (!queue.isEmpty()) {
+            for (int k = 0, l = queue.size(); k < l; k++) {
+                int curr[] = queue.poll();
+                for (int[] d : dir) {
+                    int row = curr[0] + d[0], col = curr[1] + d[1];
+                    if (row < 0 || row >= a || col < 0 || col >= b || g[row][col] != c) 
+                    continue;
+                    if (row == curr[2] && col == curr[3]) 
+                    continue;
+                    if (visited[row][col]) 
+                    return true;
+                    queue.offer(new int[]{row, col, curr[0], curr[1]});
+                    visited[row][col] = true;
+                }
+            }
+        }
+        return false;
+    }
+}
